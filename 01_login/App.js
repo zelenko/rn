@@ -8,6 +8,8 @@ import {
   View,
 } from 'react-native';
 import { createStackNavigator, createSwitchNavigator, createAppContainer } from 'react-navigation';
+import Members from './components/Members'
+import { DataProvider } from "./data/DataContext";
 
 // for NOT authenticated user
 class SignInScreen extends React.Component {
@@ -31,28 +33,31 @@ class SignInScreen extends React.Component {
 
 
 // for authenticated user
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Welcome to the app!',
-  };
+// Functional component does not have 'Component' or 'Class' in it.
+const HomeScreen = ({ navigation }) => {
 
-  render() {
+    const _showMoreApp = () => {
+        navigation.navigate('Other')
+    }
+
+    const _signOutAsync = async () => {
+        await AsyncStorage.clear() // clear data stored in AsyncStorage
+        navigation.navigate('Auth')
+    }
+
     return (
         <View style={styles.container}>
-          <Button title="Show me more of the app" onPress={this._showMoreApp} />
-          <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
+          <Button title="Show me more of the app" onPress={_showMoreApp} />
+          <Button title="RSVP Members" onPress={() => navigation.navigate('Members')} />
+          <Button title="Actually, sign me out :)" onPress={_signOutAsync} />
         </View>
-    );
-  }
+    )
+}
 
-  _showMoreApp = () => {
-    this.props.navigation.navigate('Other');
-  };
-
-  _signOutAsync = async () => {
-    await AsyncStorage.clear(); // clear data stored in AsyncStorage
-    this.props.navigation.navigate('Auth');
-  };
+HomeScreen.navigationOptions = () => {
+    return {
+        title: 'Welcome to the app!',
+    }
 }
 
 // for authenticated user
@@ -112,12 +117,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppStack = createStackNavigator({ Home: HomeScreen, Other: OtherScreen });
+const AppStack = createStackNavigator({ Home: HomeScreen, Other: OtherScreen, Members: Members });
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
-
-// This is the where the program starts:
-export default createAppContainer(createSwitchNavigator(
+const AppContainer = createAppContainer(createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
       App: AppStack, // is a list of screen when user is authenticated.
@@ -127,3 +130,11 @@ export default createAppContainer(createSwitchNavigator(
       initialRouteName: 'AuthLoading',
     }
 ));
+
+export default function App() {
+    return (
+        <DataProvider>
+            <AppContainer/>
+        </DataProvider>
+    )
+}
