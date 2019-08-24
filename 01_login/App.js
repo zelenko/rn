@@ -1,28 +1,21 @@
-import React from 'react';
-import {
-  ActivityIndicator,
-  AsyncStorage,
-  Button,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React, { Component } from 'react'
+import { ActivityIndicator, AsyncStorage, Button, StatusBar, StyleSheet, View } from 'react-native'
 import { createStackNavigator, createSwitchNavigator, createAppContainer } from 'react-navigation';
 import Members from './components/Members'
 import { DataProvider } from "./data/DataContext";
 
 // for NOT authenticated user
-class SignInScreen extends React.Component {
-  static navigationOptions = {
+class SignInScreen extends Component {
+    static navigationOptions = {
     title: 'Please sign in',
-  };
+  }
 
   render() {
     return (
         <View style={styles.container}>
           <Button title="Sign in!" onPress={this._signInAsync} />
         </View>
-    );
+    )
   }
 
   _signInAsync = async () => {
@@ -30,7 +23,6 @@ class SignInScreen extends React.Component {
     this.props.navigation.navigate('App');
   };
 }
-
 
 // for authenticated user
 // Functional component does not have 'Component' or 'Class' in it.
@@ -61,7 +53,7 @@ HomeScreen.navigationOptions = () => {
 }
 
 // for authenticated user
-class OtherScreen extends React.Component {
+class OtherScreen extends Component {
   static navigationOptions = {
     title: 'Lots of features here',
   };
@@ -83,7 +75,7 @@ class OtherScreen extends React.Component {
 
 // This is the first screen that loads when the app is opened.
 // If user is authenticated then open 'App' screen.  Otherwise open 'Auth'.
-class AuthLoadingScreen extends React.Component {
+class AuthLoadingScreen extends Component {
   constructor() {
     super();
     this._bootstrapAsync();

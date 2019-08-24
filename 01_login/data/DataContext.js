@@ -3,10 +3,9 @@ import React, { useState } from 'react'
 const DataContext = React.createContext([{}, () => {}])
 
 const DataProvider = (props) => {
-
   const [state, setState] = useState({
     members: [],
-    isLoading: false,
+    isLoading: false
   })
 
   return (
